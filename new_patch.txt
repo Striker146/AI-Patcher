@@ -1,21 +1,15 @@
 diff
 diff --git a/include/filters/median.hpp b/include/filters/median.hpp
-index 10a2b0c..5b684c5 100644
+index 10...5b684c5 100644
 --- a/include/filters/median.hpp
 +++ b/include/filters/median.hpp
-@@ -40,6 +40,9 @@
-
-
+@@ -40,6 +40,9 @@ 
 
 #include "filters/realtime_circular_buffer.hpp"
-
+ 
++// C++11 deprecation: no need to define register in this case
 +#if __cplusplus > 199711L
-+std::register_storage;  // Use this instead of register
-+#endif  // #if __cplusplus > 199711L
-
- /*********************************************************************/
++
++
+/*********************************************************************/
 /*
-. The median filter.
-*/
-class MedianFilter : public Filter {
-public:

@@ -2,9 +2,12 @@ import requests
 import json
 import re
 from tkinter.filedialog import askopenfilename
+from time import sleep
+import tkinter as tk
 
 print("hello world")
-
+root = tk.Tk()
+root.withdraw()
 
 def generate_response(prompt):
     data = {"model":"llama3", "role": "system", "prompt":prompt, "stream": False}
@@ -20,14 +23,26 @@ def generate_response(prompt):
 
 
 
-def generate_repair(file_path,error_path):
-    file = open(file_path)
-    file_read = file.read()
+def generate_repair(script_path, error_path,patch_path=None):
+
+    script = open(patch_path)
+    script_read = script.read()
+    script.close()
+
+    if patch_path != None:
+        patch = open(patch_path)
+        patch_read = patch.read()
+        patch.close()
+
     error = open(error_path)
     error_read = error.read()
-    file.close()
+    
     error.close()
-    prompt = f"Generate a new repaired patch. Here is the unix Patch code {file_read}. The error is {error_read}."
+    if patch != None:
+        prompt = f"Generate a new repaired patch. Here is the relevant script {script_read}. Here is the existing unix Patch code {patch_read}. The error is {error_read}."
+    else:
+        prompt = f"Generate a new repaired patch. Here is the relevant script {script_read}. The error is {error_read}."
+    
     return generate_response(prompt), prompt
 
 def extract_response_code(text):
@@ -40,16 +55,22 @@ def extract_response_code(text):
     return patch_code
 
 def create_patch():
-    print("Patch File: ", end="")
-    patch_path = askopenfilename()
-    print(f"'{patch_path}'")
+    print("Relevant Script File: ", end="")
+    script_path = askopenfilename()
+    print(f"'{script_path}'")
     
     print("Error File: ", end="")
     error_path = askopenfilename()
     print(f"'{error_path}'")
+    
+    print("Existing Patch File: ", end="")
+    patch_path = askopenfilename()
+    print(f"'{patch_path}'")
+    
+
 
     print("Creating patch...")
-    repair_response, prompt = generate_repair(patch_path,error_path)
+    repair_response, prompt = generate_repair(script_path, error_path,patch_path)
 
     repaired_patch = extract_response_code(repair_response["response"])
     repaired_file = open("new_patch.txt", "w")
@@ -64,7 +85,6 @@ while(1):
     print("2: Exit")
     user_inp = input("Choose an operation: ")
     if user_inp == "1":
-        print(":tes")
         create_patch()
     elif user_inp == "2":
         print("Closing...")
