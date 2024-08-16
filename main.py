@@ -4,6 +4,7 @@ import re
 from tkinter.filedialog import askopenfilename
 from time import sleep
 import tkinter as tk
+from time import time
 
 print("hello world")
 root = tk.Tk()
@@ -85,7 +86,10 @@ while(1):
     print("2: Exit")
     user_inp = input("Choose an operation: ")
     if user_inp == "1":
+        start_t = time()
         create_patch()
+        end_t = time()
     elif user_inp == "2":
         print("Closing...")
         break
+    print(f"Time Taken : {round(end_t - start_t)}")

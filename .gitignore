@@ -1,4 +1,6 @@
 /ros-noetic-main/*
-
+/ros-humble/*
+ros-humble/
+boa_log.txt
 /build
 /build/*
