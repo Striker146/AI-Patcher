@@ -3,19 +3,21 @@ import argparse
 import os
 
 
-def main():
+def get_argparser():
     parser = argparse.ArgumentParser(description="")
     parser.add_argument('-s', '--source', type=str, default="ros-humble", help="Directory of robostack")
+    return parser
 
-    args = parser.parse_args()
-
+def main(args):
     br = Popen(f"ros_build_recipes.bat {args.source}")
     #bp = Popen("ros_build_packages.bat")
+
     input("Press any key to continue")
-    
-#p = Popen("ros_build_recipes.bat", cwd=r"./")
-#stdout, stderr = p.communicate()
+
+
 
 
 if __name__ =="__main__":
-    main()
+    parser = get_argparser()
+    args = parser.parse_args()
+    main(args)
