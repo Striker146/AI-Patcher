@@ -1,8 +1,72 @@
-a/include/filters/median.hpp   2023-02-15 11:40:00.00+05
-+++ b/include/filters/median.hpp   2023-02-15 12:30:00.00+05
-@@ -1,7 +1,4 @@
-#include "filters/realtime_circular_buffer.hpp"
-
- #if __cplusplus > 199711L
- // No-op, nothing to do here
- #endif
+diff
+--- /dev/null    2023-09-15 17:42:33.000000000 +0000
++++ b/hardware_interface/include/hardware_interface/resource_manager.hpp   2023-09-15 17:42:43.000000000 +0000
+@@ -387,6 +387,18 @@
+     HardwareReadWriteStatus write(const rclcpp::Time & time, const rclcpp::Duration & period);
+ 
++/// Activates all available hardware components in the system.
++/** All available hardware components int the ros2_control framework are activated.
++ * This is used to preserve default behavior from previous versions where all hardware components
++ * are activated per default.
++ */
++void
++activate_all_components();
++
+/// Checks whether a command interface is registered under the given key.
+/**
+* \param[in] key string identifying the interface to check.
+diff
+--- /dev/null    2023-09-15 17:42:33.000000000 +0000
++++ b/hardware_interface/src/resource_manager.cpp   2023-09-15 17:42:43.000000000 +0000
+@@ -13,6 +13,28 @@
+ void ResourceManager::validate_storage(
+     throw std::runtime_error(err_msg); }
+ }+
++// Temporary method to keep old interface and reduce framework changes in the PRs
++void ResourceManager::activate_all_components()
++{ 
++  using lifecycle_msgs::msg::State;
++  rclcpp_lifecycle::State active_state(
++    State::PRIMARY_STATE_ACTIVE, hardware_interface::lifecycle_state_names::ACTIVE);
++
++  for (auto & component : resource_storage_->actuators_)
++  { 
++    set_component_state(component.get_name(), active_state); 
++  } 
++  for (auto & component : resource_storage_->sensors_)
++  { 
++    set_component_state(component.get_name(), active_state);
++  } 
++  for (auto & component : resource_storage_->systems_)
++  { 
++    set_component_state(component.get_name(), active_state); 
++  }
++} 
++
+// END: private methods
+diff
+--- /dev/null    2023-09-15 17:42:33.000000000 +0000
++++ b/hardware_interface/include/hardware_interface/lexical_casts.hpp   2023-09-15 17:42:43.000000000 +0000
+@@ -21,6 +21,8 @@
+ #include <stdexcept>
+ #include <string>
+ 
++HARDWARE_INTERFACE_PUBLIC
+ double stod(const std::string & s);
++
++HARDWARE_INTERFACE_PUBLIC
+ bool parse_bool(const std::string & bool_string);
+ }
+ }   // namespace hardware_interface
+diff
+--- /dev/null    2023-09-15 17:42:33.000000000 +0000
++++ b/hardware_interface/include/hardware_interface/types/hardware_interface_return_values.hpp   2023-09-15 17:42:43.000000000 +0000
+@@ -1,6 +1,10 @@
+ #include <cstdint>
+ 
++HARDWARE_INTERFACE_PUBLIC
+ enum class return_type : std::uint8_t
+ {
+     SUCCESS,
+     ERROR
+ };

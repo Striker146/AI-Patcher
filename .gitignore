@@ -4,3 +4,6 @@ ros-humble/
 boa_log.txt
 /build
 /build/*
+/ros-humble-github-actions
+/.vs
+auth_token.txt
