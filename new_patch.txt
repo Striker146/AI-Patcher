@@ -1,8 +1,10 @@
-a/include/filters/median.hpp   2023-02-15 11:40:00.00+05
-+++ b/include/filters/median.hpp   2023-02-15 12:30:00.00+05
-@@ -1,7 +1,4 @@
-#include "filters/realtime_circular_buffer.hpp"
+Patch generation started...
+Found issues in the build: 
+1. launch_ament_cmake - version mismatch (1.0.6 vs 1.7.3)
+2. rclcpp - version mismatch (16.0.10 vs 17.0.1)
+3. rmw - version mismatch (6.1.2 vs 7.0.1)
+4. rosidl_adapter - version mismatch (3.1.5 vs 4.0.1)
 
- #if __cplusplus > 199711L
- // No-op, nothing to do here
- #endif
+Creating a new patch...
+Patch name: toposh-2.0.5-repair.patch
+Patch contents:

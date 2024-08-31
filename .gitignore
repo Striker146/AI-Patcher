@@ -1,6 +1,11 @@
 /ros-noetic-main/*
 /ros-humble/*
+/logs/*
 ros-humble/
 boa_log.txt
 /build
 /build/*
+/__pycache__/*
+/ros-humble-github-actions
+/.vs
+auth_token.txt
