@@ -1,6 +1,19 @@
 import os
 import re
 
+def identify_failed_package(path):
+    with open(path) as f:
+        pattern = r"Output:\s*(\S+)"
+        f_data = f.read()
+        match = re.findall(pattern, f_data)
+        target = match[-1]
+        if match:
+            return target
+        else:
+            return NotImplementedError
+
+
+
 def check(path):
     file = open(path,"rb")
     try:  # catch OSError in case of a one line file 
@@ -10,8 +23,13 @@ def check(path):
     except OSError:
         file.seek(0)
     last_line = file.readline().decode()
+    print(last_line)
     sampled = re.sub(r'[╵\s]', '', last_line)
-    return not bool(len(sampled))
+    build_success = not bool(len(sampled))
+    if  build_success:
+        return build_success, None
+    else:
+        return build_success, identify_failed_package(path)
 
 
 """
@@ -29,4 +47,4 @@ if __name__ == "__main__":
     target = "ros-humble-hardware-interface"
     build_success = check(path_1)
 
-    print(build_success)
+    print(f"Built Successfully: {build_success}")
